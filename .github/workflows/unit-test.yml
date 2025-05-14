@@ -1,0 +1,31 @@
+name: Unit Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: 1.23
+        cache: true  # Ensure dependencies are cached
+
+    - name: Verify Go Version
+      run: go version  # Double-check Go version during runtime
+
+    - name: Set up Go Modules
+      run: |
+        go mod init go-test || true
+        go mod tidy
+
+    - name: Run Unit Tests
+      run: |
+        go test ./... -v
